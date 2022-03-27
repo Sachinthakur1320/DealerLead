@@ -1,0 +1,2 @@
+﻿This project contains code for UI to provide Digital Reatiling Solutions to One Eighty and integrate with it using the Internal APIs in InventoryDataAccess
+and Fortellis exposed API in FortellisInventory Project.

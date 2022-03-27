@@ -1,0 +1,1 @@
+﻿This project contains all the Internal API's to be used in DigitalRetailing Project.

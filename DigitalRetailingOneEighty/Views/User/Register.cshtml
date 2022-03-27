@@ -1,0 +1,162 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+@{
+    Layout = "_Customer";
+}
+<div class="container">
+    <form id="registerForm" >
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                            </div>
+                            <form class="user">
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="FirstName"
+                                               placeholder="First Name" required>
+                                        <p class="text-danger"><i>*required</i></p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="LastName"
+                                               placeholder="Last Name" required>
+                                        <p class="text-danger"><i>*required</i></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" class="form-control form-control-user" id="HomePhone"
+                                           placeholder="Home Phone">
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" class="form-control form-control-user" id="OfficePhone"
+                                           placeholder="Office Phone">
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" class="form-control form-control-user" id="Address"
+                                           placeholder="Address">
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="Province"
+                                               placeholder="Province">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="City"
+                                               placeholder="City">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="PostalCode"
+                                               placeholder="Postal Code">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="Country"
+                                               placeholder="Country">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="Email"
+                                           placeholder="Email Address" required>
+                                    <p class="text-danger"><i>*required</i></p>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="password" id="password" class="form-control validate"
+                                               placeholder="Password" minlength="8" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="password" id="password2" class="form-control"
+                                               placeholder="Repeat Password">
+                                    </div>
+                                </div>
+                                <div class="form-group" id="pswrdmsg"></div>
+                                <div class="form-group"><p class="text-danger"><i>*Your password must be at-least 8 characters long</i></p></div>
+                                <input type="submit" value="Submit" class="btn btn-primary btn-user btn-block" />
+                                <hr>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="@Url.Action("Login","User")">Already have an account? Login!</a><br />
+                                <a class="small" href="@Url.Action("Index",controller:"Home")">Search Vehicle inventory!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section PageScripts{
+
+    <script src="/script/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#password").on("focusout",
+                function() {
+                    if ($(this).val() != "" && $("#password2").val() != "") {
+                        if ($(this).val() !== $("#password2").val()) {
+                            $("#pswrdmsg").html("<p class='text-danger'><i>Password does not matched</i></p>");
+                        } else {
+                            $("#pswrdmsg").html("<p class='text-success'><i>Password matched</i></p>");
+                        }
+                    } else {
+                        $("#pswrdmsg").html("");
+                    }
+                });
+
+            $("#password2").on("keyup",
+                function() {
+                    if ($(this).val() != "" && $("#password").val() != "") {
+                        if ($("#password").val() !== $(this).val()) {
+                            $("#pswrdmsg").html("<p class='text-danger'><i>Password does not matched</i></p>");
+                        } else {
+                            $("#pswrdmsg").html("<p class='text-success'><i>Password matched</i></p>");
+                        }
+                    } else {
+                        $("#pswrdmsg").html("");
+                    }
+                });
+            $("#registerForm").on("submit",
+                async function (e) {
+                    e.preventDefault();
+                    if ($(password).val() === $("#password2").val()) {
+                        var elements = document.getElementById("registerForm").elements;
+                        var userDetails = {};
+                        for (var i = 0; i < elements.length; i++) {
+                            var item = elements.item(i);
+                            userDetails[item.id] = item.value;
+                        }
+                        var strJson=JSON.stringify(userDetails);
+                        await $.get("/User/UserRegistration",
+                            {strJson},
+                            function(data, status) {
+                                if (status && status === "success") {
+                                    if (data === "add_success") {
+                                        confirm("Account Created");
+                                        window.location.href = `${"@Url.Action("Index", "Home")"}`;
+                                    }
+                                    else if (data === "user_email_exist") {
+                                        confirm("Account already exist");
+                                    } else {
+                                        alert("Error Occurred. /n Please try after sometime");
+                                    }
+                                   
+                                } else {
+                                    confirm("Server is down. /n Please try again after sometime");
+                                }
+                            });
+                    }
+                });
+
+        });
+
+
+    </script>
+}

@@ -1,0 +1,193 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Dashboard";
+}
+@{
+    Layout = "_Layout";
+}
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+
+                <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                <li class="nav-item dropdown no-arrow d-sm-none">
+                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-search fa-fw"></i>
+                </a>
+
+                <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"> @Context.Session.GetString("SessionName")</span>
+                        <img class="img-profile rounded-circle"
+                             src="~/img/undraw_profile.svg">
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    @*<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                         aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Profile
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Settings
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Activity Log
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Logout
+                        </a>
+                    </div>*@
+                </li>
+
+            </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Appointments</h1>
+            </div>
+            <div class="container-fluid" id="appointments"></div>
+        </div>
+    </div>
+</div>
+<div id="spinner">
+    <div class="spinner-grow text-primary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-success" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-danger" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-warning" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-info" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-dark" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+</div>
+@section PageScript{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".rollingLoader2").hide();
+            $("#spinner").hide();
+        });
+        var dash = (async function () {
+            $("#spinner").show();
+            await $.get("/User/Appointments",
+                {},
+                function (result, status) {
+                    if (status && status === "success" && result) {
+                        result = JSON.parse(result);
+                        var content = "";
+                        content += "<div class='col-xl-3 col-md-6 mb-4'>";
+                        content += "<div class='card border-left-success shadow h-100 py-2'>";
+                        content += "<div class='card-body'>";
+                        content += "<div class='row no-gutters align-items-center'>";
+                        content += "<div class='h5 mb-0 font-weight-bold text-gray-800'>";
+                        content += `<strong>Scheduled Appointments:</strong> ${result.length}`;
+                        content += "</div></div></div></div></div>";
+                        for (var i = 0; i < result.length; i++) {
+                            content += "<div class='card border-left-success shadow h-100 py-2'>";
+                            content += "<div class='card-body'>";
+                            content += "<div class='row'>";
+                            content += `<div class='col-3'><strong>Appointment Date</strong></div>`;
+                            content += `<div class='col-3'><strong>Appointment Time</strong></div>`;
+                            content += `<div class='col-3'><strong>Dealer Name</strong></div>`;
+                            content += `<div class='col-3'><strong>Dealer Address</strong></div>`;
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += "<div class='col-12'><hr/></div>";
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += `<div class='col-3'>${result[i]?.["appointmentDate"] ?? "-"}</div>`;
+                            content += `<div class='col-3'>${result[i]?.["appointmentTime"] ?? "-"}</div>`;
+                            content += `<div class='col-3'>${result[i]?.["dealerName"] ?? "-"}</div>`;
+                            content += `<div class='col-3'>${result[i]?.["dealerAddress"] ?? "-"}</div>`;
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += "<div class='col-12'><hr/></div>";
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += `<div class='col-3'><strong>Dealer City</strong></div>`;
+                            content += `<div class='col-3'><strong>Dealer Postal Code</strong></div>`;
+                            content += `<div class='col-3'><strong>Dealer Province</strong></div>`;
+                            content += `<div class='col-3'><strong>Dealer Country</strong></div>`;
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += "<div class='col-12'><hr/></div>";
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += `<div class='col-3'>${result[i]?.["dealerCity"] ?? "-"}</div>`;
+                            content += `<div class='col-3'>${result[i]?.["dealerPostalCode"] ?? "-"}</div>`;
+                            content += `<div class='col-3'>${result[i]?.["dealerProvince"] ?? "-"}</div>`;
+                            content += `<div class='col-3'>${result[i]?.["dealerCountry"] ?? "-"}</div>`;
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += "<div class='col-12'><hr/></div>";
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += `<div class='col-3'><strong>Dealer Phone</strong></div>`;
+                            content += `<div class='col-3'><strong>Dealer Email</strong></div>`;
+                            content += `<div class='col-3'><strong>Dealer Website</strong></div>`;
+                            content += `<div class='col-3'><strong></strong></div>`;
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += "<div class='col-12'><hr/></div>";
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += `<div class='col-3'>${result[i]?.["dealerPhone"] ?? "-"}</div>`;
+                            content += `<div class='col-3'>${result[i]?.["dealerEmail"] ?? "-"}</div>`;
+                            content += `<div class='col-3'>${result[i]?.["dealerWebsite"] ?? "-"}</div>`;
+                            content += `<div class='col-3'></div>`;
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += "<div class='col-12'><hr/></div>";
+                            content += "</div>";
+                            content += "<div class='row'>";
+                            content += "<div class='col-12'><strong>Comments</strong></div>";
+                            content += "</div>";
+                            content += "<div class='row container well'>";
+                            content += `<div class='col-12'>${result[i]?.["comments"] ?? "-"}</div>`;
+                            content += "</div>";
+                            content += "</div>";
+                            content += "</div><br/>";
+                        }
+                        $("#spinner").hide();
+                        $("#appointments").html(content);
+                    } else {
+                        $("#spinner").hide();
+                        $("#appointments").html("No Appointment to Show");
+                    }
+                }
+            );
+        })();
+    </script>
+
+}

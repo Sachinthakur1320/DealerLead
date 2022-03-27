@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Home Page";
+}
+@{
+    Layout = "_Layout";
+}
+<div class="d-flex justify-content-center align-items-center" style="height:100px;">
+    <form action="#" method="post">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <select class="form-control search-slt" id="vehicleAvailability">
+                            <option value="ForSaleReady" selected>Vehicles ready for Sale</option>
+                            <option value="OnHold">Vehicles on hold by Someone</option>
+                            <option value="ForSaleNotReady">Vehicles not ready for Sale</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-1">&nbsp;</div>
+                    <div class="col-xs-5">
+                        <select class="form-control search-slt" id="select1">
+                            <option value="">Select location</option>
+                            <option value="AB">Alberta</option>
+                            <option value="BC">British Columbia</option>
+                            <option value="MB">Manitoba</option>
+                            <option value="NB">New Brunswick</option>
+                            <option value="NL">Newfoundland</option>
+                            <option value="NS">Nova Scotia</option>
+                            <option value="NT">Northwest Territories</option>
+                            <option value="NU">Nunavut</option>
+                            <option value="ON">Ontario</option>
+                            <option value="PE">Prince Edward Island</option>
+                            <option value="QU">Quebec</option>
+                            <option value="SK">Saskatchewan</option>
+                            <option value="YT">Yukon</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-1">&nbsp;</div>
+                    <div class="col-xs-12">
+                        <button class="btn btn-primary rollingLoader1" type="button" onclick="getDealer()">
+                            <div>
+                                Search
+                                <div class="spinner-border text-success rollingLoader2" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="spinner">
+    <div class="spinner-grow text-primary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-success" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-danger" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-warning" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-info" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div class="spinner-grow text-dark" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+</div>
+<div id="table1" style="overflow-y:scroll;height:900px;width:100%;"></div>

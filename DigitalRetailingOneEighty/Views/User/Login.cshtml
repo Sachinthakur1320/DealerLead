@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+@{
+    Layout = "_Customer";
+}
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                </div>
+                                <form class="user">
+                                    <div class="form-group">
+                                        <input type="email" class="form-control form-control-user"
+                                               id="Email" aria-describedby="emailHelp"
+                                               placeholder="Enter Email Address...">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-user"
+                                               id="Password" placeholder="Password" minlength="8">
+                                    </div>
+                                        <button type="button" onclick="validateUser()"  class="btn btn-primary btn-user btn-block">
+                                            Login
+                                        </button>
+                                    <hr>
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" href="@Url.Action("Register","User")">Create an Account!</a><br/>
+                                    <a class="small" href="@Url.Action("Index",controller:"Home")">Search Vehicle inventory!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageScripts
+{
+    <script type="text/javascript">
+        var validateUser = function() {
+            var userEmail = $('#Email').val();
+            var userPswrd = $('#Password').val();
+            if (userEmail && userEmail.length > 4 && userPswrd && userPswrd.length >= 8) {
+                 $.get("/User/LoginUser",
+                    { userEmail, userPswrd },
+                    function(data, status) {
+                        if (status && status === "success") {
+                            if (data === "not_logged_in") {
+                                alert("not_logged_in");
+                            } else if (data === "no_user_found") {
+                                alert("no_user_found");
+                            } else if (data === "failed_login") {
+                                alert("failed to login")
+                            } else if (data === "success_login") {
+                                alert("success_login");
+                                window.location.href = `${"@Url.Action("Dashboard", "User")"}`;
+                            }
+                        } else {
+                            alert("Error Response from Server");
+                        }
+                    });
+            }
+            else {
+                alert("Not Valid Credential");
+            }
+        };
+    </script>
+
+}
